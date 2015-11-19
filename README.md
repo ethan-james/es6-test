@@ -1,5 +1,5 @@
 # ES6 test
-playing around with ES6 and some methods for inheritance &amp; templating
+Playing around with ES6 and some methods for inheritance &amp; templating
 
 To install and run:
 

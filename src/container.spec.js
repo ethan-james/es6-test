@@ -1,19 +1,19 @@
 'use strict';
 
-import {Model, Template, Employee, Mixin} from "./bootstrap";
+import {Model, Template, Container, Mixin} from "./bootstrap";
 
-describe("Employee", function () {
+describe("Container", function () {
   var employee;
 
   beforeEach(function () {
-    employee = Employee.create({
+    employee = Container.create({
       salary : Model.create(0, "salary"),
       title : Model.create("", "title", { defaultValue : "" }, Mixin.StringValue)
     });
   });
 
   it("should do something", function () {
-    expect(!!Employee).toBe(true);
+    expect(!!Container).toBe(true);
     expect(!!employee).toBe(true);
   });
 

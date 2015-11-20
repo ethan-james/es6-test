@@ -3,7 +3,7 @@
 import functional from "./functional";
 import Model from "./model";
 
-export default class Employee extends Model {
+export default class Container extends Model {
   constructor(value = {}, name, opts) {
     super(value, name || value.name, Object.assign({ defaultValue : {} }, opts));
   }

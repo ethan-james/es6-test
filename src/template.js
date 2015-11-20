@@ -31,8 +31,8 @@ export default class Template extends Model {
     return functional.isObject(value);
   }
 
-  clear(new_value) {
-    this.value = functional.applyModifiers({}, new_value || {});
+  clear(value) {
+    this.value = functional.applyModifiers({}, value || {});
   }
 
   crunch() {

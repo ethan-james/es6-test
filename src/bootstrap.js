@@ -3,11 +3,11 @@
 import Factory from "./factory";
 import Model from "./model";
 import Template from "./template";
-import Employee from "./employee";
+import Container from "./container";
 
 Factory.add(Model, "Model");
 Factory.add(Template, "Template");
-Factory.add(Employee, "Employee");
+Factory.add(Container, "Container");
 
 Factory.Mixin = {
   StringValue : {

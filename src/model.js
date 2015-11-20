@@ -131,11 +131,7 @@ export default class Model {
   }
 
   crunch() {
-    this.doCrunch(this.dependencies);
-  }
-
-  doCrunch(dependencies) {
-    this.value = dependencies.reduce((sum, dependency) => {
+    this.value = this.dependencies.reduce((sum, dependency) => {
       return this.parseValue(functional.applyModifier(sum, this.resolveDependency(dependency)));
     }, this.options.defaultValue);
   }

@@ -1,13 +1,8 @@
 'use strict';
 
-export default {
-  first(arr) {
-    return (this.isArray(arr) && !this.isEmpty(arr)) ? arr.slice(0, 1).pop() : null;
-  },
+import _ from "lodash";
 
-  last(arr) {
-    return (this.isArray(arr) && !this.isEmpty(arr)) ? arr.slice(-1).pop() : null;
-  },
+export default {
 
   isModifier(modifier) {
     return typeof modifier == "string" && /^[+-]/.test(modifier);
@@ -35,9 +30,8 @@ export default {
     }
 
     for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        return false;
-      }
+      // probably not empty if it has properties in its prototype chain
+      return false;
     }
 
     return true;
@@ -59,6 +53,32 @@ export default {
     return modifier;
   },
 
+  applyModifiers(original, modifiers, opts) {
+    var obj = Object.assign({}, original);
+
+    if (modifiers === null) {
+      return {};
+    }
+
+    _.forOwn(modifiers, (value, key) => {
+      if (this.isModifier(value)) {
+        obj[key] = this.applyModifier(obj[key], value);
+      } else {
+        if (value && typeof value == "object") {
+          obj[key] = this.applyModifiers(obj[key] || {}, value);
+        } else {
+          obj[key] = value;
+        }
+      }
+
+      if (this.isEmpty(obj[key]) && !this.isEmpty(original[key])) {
+        delete obj[key];
+      }
+    });
+
+    return obj;
+  },
+
   stringModifier(mod) {
     if (!mod || !parseInt(mod)) {
       return "";
@@ -69,13 +89,6 @@ export default {
     }
 
     return "+" + parseInt(mod);
-  },
-
-  tokenize(str) {
-    if (this.isEmpty(str)) {
-      return [];
-    }
-    return str.split(/,(?=(?:[^\)]|\([^\)]*\))*$)/).map(item => item.trim());
   },
 
   parseNumber(number) {
@@ -92,5 +105,11 @@ export default {
       default:
         return parseFloat(number);
     }
+  },
+
+  objectMap(obj, func, context) {
+    return Object.keys(obj).reduce((accumulator, key) => {
+      return this.applyModifiers(accumulator, func.call(context, obj[key], key));
+    }, {});
   }
 }

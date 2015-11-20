@@ -42,7 +42,7 @@ export default class Model {
   }
 
   isValid(value) {
-    return typeof value == "number" || functional.isModifier(value);
+    return typeof value == "number";
   }
 
   parseValue(value) {
@@ -50,7 +50,7 @@ export default class Model {
   }
 
   dealloc() {
-    this.dependencies.forEach(d => { if (d) this.removeDependency(d.model) });
+    this.dependencies.forEach(d => { this.removeDependency(d.model) });
     this.dependents.forEach(d => d.removeDependency(this));
   }
 
@@ -77,11 +77,7 @@ export default class Model {
   }
 
   hasDependency(model) {
-    if (typeof model == "string") {
-      return this.dependencies.some(func => func.model.attr_name == model);
-    } else {
-      return this.dependencies.some(func => func.model == model);
-    }
+    return this.indexOfDependency(model) != -1;
   }
 
   indexOfDependency(model) {
@@ -92,9 +88,9 @@ export default class Model {
   }
 
   dependencyIsValid(dependency) {
-    return dependency.model && 
+    return !!(dependency.model && 
       !this.hasDependency(dependency.model) && 
-      dependency.model != this;
+      dependency.model != this);
   }
 
   removeDependency(model) {
@@ -135,20 +131,12 @@ export default class Model {
   }
 
   crunch() {
-    if (this.options.container && this.options.container.preprocessing) {
-      this.doPreprocess(this.dependencies);
-    } else {
-      this.doCrunch(this.dependencies);
-    }
+    this.doCrunch(this.dependencies);
   }
 
   doCrunch(dependencies) {
     this.value = dependencies.reduce((sum, dependency) => {
       return this.parseValue(functional.applyModifier(sum, this.resolveDependency(dependency)));
     }, this.options.defaultValue);
-  }
-
-  doPreprocess(dependencies) {
-    this.doCrunch(dependencies);
   }
 };

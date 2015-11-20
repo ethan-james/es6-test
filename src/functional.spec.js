@@ -8,34 +8,6 @@ describe("functional", function () {
     expect(!!functional).toBe(true);
   });
 
-  it("should return the first value of an array", function () {
-    expect(functional.first("abc")).toBe(null);
-    expect(functional.first({"a" : 1, "b" : 2})).toBe(null);
-    expect(functional.first([4, 3, 2])).toBe(4);
-  });
-
-  it("should return null for an empty array", function () {
-    expect(functional.first([])).toBe(null);
-  });
-
-  it("should return null for a non-array", function () {
-    expect(functional.first()).toBe(null);
-  });
-
-  it("should return the last value of an array", function () {
-    expect(functional.last([4, 3, 2])).toBe(2);
-  });
-
-  it("should return null for an empty array", function () {
-    expect(functional.last([])).toBe(null);
-  });
-
-  it("should return null for a non-array", function () {
-    expect(functional.last("abc")).toBe(null);
-    expect(functional.last({"a" : 1, "b" : 2})).toBe(null);
-    expect(functional.last()).toBe(null);
-  });
-
   it("should correctly identify a modifier", function () {
     expect(functional.isModifier("+3")).toBe(true);
     expect(functional.isModifier("-4")).toBe(true);
@@ -79,6 +51,9 @@ describe("functional", function () {
     expect(functional.isEmpty([])).toBe(true);
     expect(functional.isEmpty({})).toBe(true);
     expect(functional.isEmpty(null)).toBe(true);
+    // need to consider empty objects with prototypes, but I think I
+    // probably want them to return false
+    // expect(functional.isEmpty(Object.create({"a" : 1}))).toBe(true);
     expect(functional.isEmpty()).toBe(true);
   });
 
@@ -123,20 +98,6 @@ describe("functional", function () {
     expect(functional.stringModifier([])).toBe("");
     expect(functional.stringModifier({})).toBe("");
     expect(functional.stringModifier("abc")).toBe("");
-  });
-
-  it("should tokenize a string by commas", function () {
-    expect(functional.tokenize("a, b, c")).toEqual(["a", "b", "c"]);
-  });
-
-  it("should ignore commas in parentheses when tokenizing", function () {
-    expect(functional.tokenize("a (1, 2, 3), b (4, 5, 6), c (7, 8, 9)")).toEqual(["a (1, 2, 3)", "b (4, 5, 6)", "c (7, 8, 9)"]);
-  });
-
-  it("should tokenize empty values", function () {
-    expect(functional.tokenize()).toEqual([]);
-    expect(functional.tokenize(null)).toEqual([]);
-    expect(functional.tokenize("")).toEqual([]);
   });
 
   it("should parse ints and floats", function () {
